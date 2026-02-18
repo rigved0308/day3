@@ -1,0 +1,993 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>A Letter For You — Day 3</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Dancing+Script:wght@500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --lav1:#e9d8fd; --lav2:#c4b5fd; --lav3:#8b5cf6; --lav4:#4c1d95;
+      --rose:#f9a8d4; --gold:#fde68a;
+      --ink:#1a0e2e; --paper:#faf7ff; --paperEdge:#e8dff8;
+      --muted:#6b5280;
+      --shadow:0 32px 90px rgba(30,10,70,.55);
+      --glass:rgba(255,255,255,.12);
+      --glassBorder:rgba(255,255,255,.28);
+    }
+    html{scroll-behavior:smooth;}
+    body{
+      min-height:100vh;
+      font-family:'Inter',sans-serif;
+      color:#fff;
+      overflow-x:hidden;
+      background:
+        radial-gradient(1400px 1000px at 10% 0%,#4a1fa8,transparent 55%),
+        radial-gradient(1100px 900px at 90% 0%,#7c3abf,transparent 55%),
+        radial-gradient(1300px 900px at 50% 100%,#2d1b69,#0f0720 60%);
+    }
+
+    /* BLOBS */
+    .blob{position:fixed;border-radius:60% 40% 70% 30%;filter:blur(90px);
+      mix-blend-mode:screen;opacity:.45;z-index:-3;pointer-events:none;}
+    .blob.a{width:600px;height:600px;background:#b48ef0;top:-200px;left:-160px;animation:bA 24s ease-in-out infinite alternate;}
+    .blob.b{width:500px;height:500px;background:#e8a0bf;top:-180px;right:-140px;animation:bB 28s ease-in-out infinite alternate;}
+    .blob.c{width:700px;height:700px;background:#7c3abf;bottom:-250px;left:5%;animation:bC 32s ease-in-out infinite alternate;}
+    .blob.d{width:400px;height:400px;background:#fde68a;bottom:-150px;right:5%;animation:bD 20s ease-in-out infinite alternate;}
+    @keyframes bA{to{transform:translate(60px,80px) scale(1.07);}}
+    @keyframes bB{to{transform:translate(-70px,90px) scale(1.08);}}
+    @keyframes bC{to{transform:translate(90px,-55px) scale(1.06);}}
+    @keyframes bD{to{transform:translate(-50px,-40px) scale(1.05);}}
+
+    /* STARS */
+    .stars{position:fixed;inset:0;pointer-events:none;z-index:-2;
+      background-image:
+        radial-gradient(1.5px 1.5px at 8% 18%,rgba(255,255,255,.9),transparent 55%),
+        radial-gradient(1.5px 1.5px at 75% 12%,rgba(255,255,255,.8),transparent 55%),
+        radial-gradient(2px 2px at 50% 70%,rgba(255,255,255,.75),transparent 55%),
+        radial-gradient(1.5px 1.5px at 20% 80%,rgba(255,255,255,.65),transparent 55%),
+        radial-gradient(1.5px 1.5px at 85% 55%,rgba(255,255,255,.7),transparent 55%),
+        radial-gradient(1px 1px at 35% 40%,rgba(255,255,255,.55),transparent 55%),
+        radial-gradient(1px 1px at 62% 88%,rgba(255,255,255,.6),transparent 55%);
+      animation:twinkle 16s linear infinite alternate;}
+    @keyframes twinkle{to{opacity:.5;transform:scale(1.02);}}
+
+    /* AMBIENT PETALS */
+    .petalLayer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:-1;}
+    .fp{position:absolute;border-radius:60% 40% 50% 50%/40% 50% 60% 50%;opacity:0;animation:fpFall linear infinite;}
+    @keyframes fpFall{
+      0%{opacity:0;transform:translateY(-40px) rotate(0deg);}
+      10%{opacity:.65;}90%{opacity:.45;}
+      100%{opacity:0;transform:translateY(110vh) rotate(540deg);}
+    }
+
+    /* LAYOUT */
+    .wrap{max-width:780px;margin:0 auto;padding:40px 18px 100px;
+      display:flex;flex-direction:column;align-items:center;gap:0;}
+
+    /* TOP CHIP */
+    .topChip{display:inline-flex;align-items:center;gap:9px;padding:8px 16px;
+      border-radius:999px;background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(20px);
+      font-size:13px;color:rgba(255,255,255,.85);
+      margin-bottom:28px;animation:chipIn .7s ease both;}
+    @keyframes chipIn{from{opacity:0;transform:translateY(-14px);}to{opacity:1;transform:none;}}
+    .chipDot{width:8px;height:8px;border-radius:999px;
+      background:radial-gradient(circle,#fff,#d8b4fe 45%,#a78bf0 90%);
+      box-shadow:0 0 10px #d8b4fe;animation:chipGlow 2.6s ease-in-out infinite;}
+    @keyframes chipGlow{0%,100%{box-shadow:0 0 8px #d8b4fe;}50%{box-shadow:0 0 22px #d8b4fe,0 0 38px rgba(167,139,240,.6);}}
+
+    /* STEP NAV */
+    .stepNav{display:flex;align-items:center;gap:0;margin-bottom:28px;
+      background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);
+      backdrop-filter:blur(20px);border-radius:999px;padding:6px 10px;
+      overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:96vw;}
+    .stepNav::-webkit-scrollbar{height:0;}
+    .stepPill{padding:7px 16px;border-radius:999px;font-size:12.5px;font-weight:600;
+      color:rgba(255,255,255,.6);cursor:pointer;white-space:nowrap;flex-shrink:0;
+      transition:background .25s ease,color .25s ease,transform .25s cubic-bezier(.34,1.56,.64,1);}
+    .stepPill.active{background:linear-gradient(135deg,#8b5cf6,#c084fc);color:#fff;
+      box-shadow:0 8px 24px rgba(139,92,246,.5);transform:scale(1.04);}
+    .stepPill.done{color:rgba(255,255,255,.8);}
+
+    /* SCREEN WRAP */
+    .screenWrap{width:min(740px,96vw);position:relative;overflow:hidden;
+      border-radius:24px;border:1px solid rgba(255,255,255,.22);
+      background:linear-gradient(145deg,rgba(255,255,255,.18),rgba(15,7,32,.97));
+      backdrop-filter:blur(28px) saturate(180%);
+      box-shadow:var(--shadow);
+      transition:height .5s cubic-bezier(.16,1,.3,1);min-height:300px;}
+    .screen{position:absolute;inset:0;padding:28px 26px 30px;
+      opacity:0;pointer-events:none;
+      transition:opacity .45s ease,transform .45s cubic-bezier(.16,1,.3,1);}
+    .screen.enter-r{transform:translateX(60px);}
+    .screen.enter-l{transform:translateX(-60px);}
+    .screen.exit-l{transform:translateX(-60px);opacity:0;pointer-events:none;}
+    .screen.exit-r{transform:translateX(60px);opacity:0;pointer-events:none;}
+    .screen.active{opacity:1;pointer-events:auto;transform:translateX(0);}
+    .screen.active .stag{animation:fadeSlide .5s ease both;}
+    @keyframes fadeSlide{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+    .stag:nth-child(1){animation-delay:.04s;}.stag:nth-child(2){animation-delay:.10s;}
+    .stag:nth-child(3){animation-delay:.16s;}.stag:nth-child(4){animation-delay:.22s;}
+    .stag:nth-child(5){animation-delay:.28s;}.stag:nth-child(6){animation-delay:.34s;}
+    .stag:nth-child(7){animation-delay:.40s;}.stag:nth-child(8){animation-delay:.46s;}
+    .stag:nth-child(9){animation-delay:.52s;}.stag:nth-child(10){animation-delay:.58s;}
+    @media(max-width:560px){.screen{padding:20px 16px 22px;}}
+
+    /* NAV ROW */
+    .navRow{width:min(740px,96vw);margin-top:14px;
+      display:flex;justify-content:space-between;align-items:center;}
+    .pageLabel{font-size:13px;color:rgba(255,255,255,.55);}
+    .navBtns{display:flex;gap:8px;}
+    .navBtn{border-radius:999px;border:1px solid rgba(255,255,255,.3);
+      background:rgba(255,255,255,.1);backdrop-filter:blur(16px);
+      color:#fff;font-size:13.5px;font-weight:600;padding:9px 20px;cursor:pointer;
+      transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s ease,background .22s ease;}
+    .navBtn.primary{background:linear-gradient(135deg,#8b5cf6,#c084fc);
+      border-color:rgba(255,255,255,.4);box-shadow:0 12px 32px rgba(139,92,246,.5);}
+    .navBtn:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 20px 50px rgba(139,92,246,.5);}
+    .navBtn:active{transform:scale(.97);}
+    .navBtn:disabled{opacity:.3;cursor:not-allowed;transform:none !important;}
+
+    /* SHARED */
+    .screenTitle{font-family:'Dancing Script',cursive;font-size:clamp(22px,4vw,30px);
+      color:var(--lav2);margin-bottom:8px;line-height:1.2;}
+    .screenLead{font-size:14.8px;line-height:1.8;color:rgba(255,255,255,.8);margin-bottom:14px;}
+    .divider{display:flex;align-items:center;gap:10px;margin:16px 0;
+      color:var(--lav2);font-size:14px;opacity:.6;}
+    .divider::before,.divider::after{content:"";flex:1;height:1px;
+      background:linear-gradient(90deg,transparent,var(--lav2),transparent);}
+
+    /* ══════════════════════════════
+       PAGE 1 — LETTER
+    ══════════════════════════════ */
+    .envelopeArea{display:flex;flex-direction:column;align-items:center;gap:0;}
+    .envelope{width:min(420px,88vw);aspect-ratio:1.65/1;position:relative;cursor:pointer;
+      animation:envIn .9s .1s cubic-bezier(.16,1,.3,1) both;}
+    @keyframes envIn{from{opacity:0;transform:translateY(30px) scale(.95);}to{opacity:1;transform:none;}}
+    .envBack{position:absolute;inset:0;border-radius:10px;
+      background:linear-gradient(145deg,#c4b5fd,#9b7dd4);
+      box-shadow:0 28px 70px rgba(60,20,120,.6);}
+    .envFlap{position:absolute;top:0;left:0;right:0;height:50%;
+      transform-origin:top center;transform-style:preserve-3d;
+      transition:transform .9s cubic-bezier(.4,0,.2,1);z-index:4;}
+    .envelope.open .envFlap{transform:rotateX(-180deg);}
+    .flapFace,.flapBack{position:absolute;inset:0;backface-visibility:hidden;
+      -webkit-backface-visibility:hidden;clip-path:polygon(0 0,50% 78%,100% 0);}
+    .flapFace{background:linear-gradient(160deg,#b99ee0,#8a6ccc);}
+    .flapBack{background:linear-gradient(160deg,#d4bcf0,#b49de0);transform:rotateX(180deg);}
+    .envBL,.envBR{position:absolute;bottom:0;height:55%;width:50%;
+      background:linear-gradient(160deg,#b89dd8,#9580c8);}
+    .envBL{left:0;clip-path:polygon(0 0,100% 100%,0 100%);}
+    .envBR{right:0;clip-path:polygon(100% 0,100% 100%,0 100%);}
+    .envBBottom{position:absolute;bottom:0;left:0;right:0;height:55%;
+      background:linear-gradient(170deg,#c8aee8,#a080d0);border-radius:0 0 10px 10px;}
+    .waxSeal{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);
+      width:48px;height:48px;border-radius:999px;
+      background:radial-gradient(circle at 38% 35%,#f5d0a9,#c0621c 55%,#8b3a08 90%);
+      border:3px solid rgba(255,255,255,.3);box-shadow:0 8px 28px rgba(0,0,0,.6);
+      display:flex;align-items:center;justify-content:center;font-size:18px;z-index:6;
+      transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
+    .waxSeal:hover{transform:translateX(-50%) scale(1.1);}
+    .envelope.open .waxSeal{animation:sealPop .4s .6s cubic-bezier(.34,1.56,.64,1) both;}
+    @keyframes sealPop{from{opacity:0;transform:translateX(-50%) scale(.4);}to{opacity:1;transform:translateX(-50%) scale(1);}}
+    .envHint{margin-top:34px;font-size:13px;color:rgba(255,255,255,.6);
+      letter-spacing:.08em;animation:pulse2 2.2s ease-in-out infinite;text-align:center;}
+    @keyframes pulse2{0%,100%{opacity:.55;}50%{opacity:1;}}
+
+    /* LETTER SHEET */
+    .letterSheet{
+      margin-top:38px;background:var(--paper);
+      border-radius:4px 4px 14px 14px;
+      box-shadow:0 2px 0 var(--paperEdge),0 4px 0 #d8ccf0,0 40px 100px rgba(30,10,70,.55);
+      padding:44px 42px 52px;position:relative;overflow:hidden;
+      opacity:0;transform:translateY(24px) scale(.97);
+      transition:opacity .7s ease,transform .7s cubic-bezier(.16,1,.3,1);}
+    .letterSheet.show{opacity:1;transform:none;}
+    @media(max-width:560px){.letterSheet{padding:28px 18px 40px;}}
+    .letterSheet::before{content:"";position:absolute;left:50px;top:0;bottom:0;width:1px;
+      background:linear-gradient(to bottom,transparent,rgba(167,139,240,.35) 20%,rgba(167,139,240,.35) 80%,transparent);}
+    @media(max-width:560px){.letterSheet::before{left:28px;}}
+    .lRose{text-align:center;margin-bottom:24px;font-size:30px;animation:roseSway 4s ease-in-out infinite;}
+    @keyframes roseSway{0%,100%{transform:rotate(-5deg);}50%{transform:rotate(5deg);}}
+    .lDate{font-family:'Dancing Script',cursive;font-size:15px;color:var(--muted);
+      text-align:right;margin-bottom:6px;}
+    .lSalut{font-family:'Dancing Script',cursive;font-size:26px;color:var(--lav3);
+      margin-bottom:20px;line-height:1.2;}
+    @media(max-width:560px){.lSalut{font-size:21px;}}
+    .lPara{font-family:'Cormorant Garamond',serif;font-size:17px;line-height:2.0;
+      color:#2c1a4a;margin-bottom:20px;
+      opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s ease;}
+    .lPara.show{opacity:1;transform:none;}
+    .lPara em{font-style:italic;color:var(--lav3);}
+    .lPara strong{font-weight:600;color:var(--lav4);}
+    .lPara.first::first-letter{font-family:'Dancing Script',cursive;font-size:3.6em;
+      float:left;line-height:.75;margin:4px 6px 0 0;color:var(--lav3);}
+    .lDivider{display:flex;align-items:center;gap:10px;margin:6px 0 22px;
+      color:var(--lav2);font-size:14px;}
+    .lDivider::before,.lDivider::after{content:"";flex:1;height:1px;
+      background:linear-gradient(90deg,transparent,var(--lav2),transparent);}
+    .lQuote{margin:18px 0 22px;padding:14px 16px;
+      border-left:3px solid var(--lav2);
+      background:linear-gradient(135deg,rgba(167,139,240,.1),rgba(232,160,191,.07));
+      border-radius:0 12px 12px 0;
+      font-family:'Cormorant Garamond',serif;font-size:16.5px;font-style:italic;
+      line-height:1.9;color:var(--lav4);
+      opacity:0;transform:translateX(-10px);transition:opacity .6s ease,transform .6s ease;}
+    .lQuote.show{opacity:1;transform:none;}
+    .lPs{font-family:'Cormorant Garamond',serif;font-size:14.5px;font-style:italic;
+      color:var(--muted);margin-top:24px;line-height:1.8;
+      opacity:0;transform:translateY(8px);transition:opacity .6s ease,transform .6s ease;}
+    .lPs.show{opacity:1;transform:none;}
+    .lClose{margin-top:32px;text-align:right;
+      opacity:0;transform:translateY(10px);transition:opacity .7s ease,transform .7s ease;}
+    .lClose.show{opacity:1;transform:none;}
+    .lCloseWord{font-family:'Dancing Script',cursive;font-size:20px;color:var(--muted);
+      display:block;margin-bottom:4px;}
+    .lCloseName{font-family:'Dancing Script',cursive;font-size:30px;color:var(--lav3);display:block;}
+    .lHearts{display:flex;gap:8px;justify-content:center;margin-top:26px;font-size:19px;
+      opacity:0;transition:opacity .6s ease;}
+    .lHearts.show{opacity:1;}
+    .lHearts span{animation:hBeat 1.8s ease-in-out infinite;}
+    .lHearts span:nth-child(2){animation-delay:.2s;}.lHearts span:nth-child(3){animation-delay:.4s;}
+    @keyframes hBeat{0%,100%{transform:scale(1);}50%{transform:scale(1.25);}}
+
+    /* ══════════════════════════════
+       PAGE 2 — TROPHIES
+    ══════════════════════════════ */
+    .trophyGrid{display:flex;flex-direction:column;gap:9px;margin-top:12px;}
+    .trophy{display:flex;gap:11px;align-items:flex-start;padding:11px 13px;
+      border-radius:16px;border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.07);cursor:pointer;position:relative;overflow:hidden;
+      transition:transform .22s cubic-bezier(.34,1.56,.64,1),border-color .22s ease,
+                 box-shadow .22s ease,background .22s ease;}
+    .trophy:hover{transform:translateY(-2px) scale(1.015);
+      box-shadow:0 20px 50px rgba(0,0,0,.5);background:rgba(255,255,255,.12);}
+    .trophy.unlocked{border-color:rgba(196,181,253,.7);
+      background:linear-gradient(135deg,rgba(139,92,246,.25),rgba(232,160,191,.15));}
+    .trophy.unlocked::after{content:"✓";position:absolute;right:12px;top:50%;
+      transform:translateY(-50%);font-size:14px;color:#c4b5fd;}
+    .trophyIco{width:34px;height:34px;border-radius:999px;flex-shrink:0;
+      background:rgba(255,255,255,.12);display:flex;align-items:center;
+      justify-content:center;font-size:17px;box-shadow:0 8px 22px rgba(0,0,0,.5);}
+    .trophyTxt{flex:1;font-size:13.5px;line-height:1.65;color:rgba(255,255,255,.85);}
+    .trophyResponse{margin-top:14px;padding:14px 16px;border-radius:16px;
+      border:1px dashed rgba(196,181,253,.45);background:rgba(255,255,255,.07);
+      font-family:'Cormorant Garamond',serif;font-size:15.5px;line-height:1.9;
+      color:rgba(255,255,255,.9);min-height:80px;transition:all .35s ease;}
+
+    /* ══════════════════════════════
+       PAGE 3 — STRENGTH
+    ══════════════════════════════ */
+    .scoreBox{padding:16px;border-radius:18px;border:1px solid rgba(255,255,255,.2);
+      background:rgba(255,255,255,.07);margin-top:12px;}
+    .scoreTop{display:flex;justify-content:space-between;align-items:center;
+      font-size:13px;color:rgba(255,255,255,.65);margin-bottom:10px;}
+    .scoreNum{font-size:26px;font-weight:800;color:var(--lav1);transition:color .3s ease;}
+    .track{height:13px;border-radius:999px;background:rgba(0,0,0,.5);
+      box-shadow:inset 0 0 8px rgba(0,0,0,.8);overflow:hidden;}
+    .fill{height:100%;width:0%;border-radius:inherit;
+      background:linear-gradient(90deg,#8b5cf6,#c084fc,#f9a8d4);
+      box-shadow:0 0 20px rgba(139,92,246,.8);
+      transition:width .6s cubic-bezier(.16,1,.3,1);}
+    .btnPair{display:flex;gap:9px;margin-top:11px;}
+    .smBtn{flex:1;border-radius:999px;border:1px solid rgba(255,255,255,.3);
+      background:rgba(255,255,255,.12);color:#fff;font-size:13px;font-weight:600;
+      padding:8px 10px;cursor:pointer;
+      transition:transform .2s cubic-bezier(.34,1.56,.64,1),background .2s ease;}
+    .smBtn:hover{transform:translateY(-1px) scale(1.03);background:rgba(255,255,255,.2);}
+    .smBtn:active{transform:scale(.97);}
+    .affirmBox{margin-top:13px;padding:14px 16px;border-radius:16px;
+      border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);
+      font-family:'Cormorant Garamond',serif;font-size:16px;line-height:1.95;
+      color:rgba(255,255,255,.9);min-height:86px;transition:all .4s ease;}
+    .starRow{display:flex;gap:10px;margin-top:14px;justify-content:center;}
+    .star{font-size:28px;cursor:pointer;
+      transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .2s ease;
+      filter:grayscale(.8) brightness(.7);}
+    .star.lit{filter:none;}
+    .star:hover{transform:scale(1.22);}
+    .starLabel{text-align:center;margin-top:8px;font-family:'Dancing Script',cursive;
+      font-size:17px;color:var(--lav2);min-height:28px;transition:all .3s ease;}
+
+    /* ══════════════════════════════
+       PAGE 4 — MOOD
+    ══════════════════════════════ */
+    .moodGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+      gap:9px;margin-top:12px;}
+    .moodBtn{border-radius:16px;border:1px solid rgba(255,255,255,.22);
+      background:rgba(255,255,255,.08);padding:10px 12px;font-size:13px;
+      color:rgba(255,255,255,.88);display:flex;gap:7px;align-items:center;cursor:pointer;
+      transition:transform .22s cubic-bezier(.34,1.56,.64,1),
+                 background .22s ease,border-color .22s ease;}
+    .moodBtn em{font-size:17px;font-style:normal;}
+    .moodBtn:hover{transform:translateY(-2px) scale(1.04);background:rgba(255,255,255,.16);}
+    .moodBtn.chosen{background:linear-gradient(135deg,rgba(139,92,246,.45),rgba(232,160,191,.3));
+      border-color:rgba(196,181,253,.7);}
+    .moodOut{margin-top:14px;padding:16px;border-radius:18px;
+      border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);
+      font-family:'Cormorant Garamond',serif;font-size:16.5px;line-height:2.0;
+      color:rgba(255,255,255,.92);min-height:100px;transition:all .4s ease;}
+
+    /* ══════════════════════════════
+       PAGE 5 — LOVE CARDS  ← FIXED
+    ══════════════════════════════ */
+    .loveDeck{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+      gap:10px;margin-top:12px;
+    }
+    .loveCard{
+      padding:14px;border-radius:18px;
+      border:1px solid rgba(255,255,255,.2);
+      background:rgba(255,255,255,.07);
+      cursor:pointer;
+      display:flex;flex-direction:column;
+      transition:transform .25s cubic-bezier(.34,1.56,.64,1),
+                 box-shadow .25s ease,background .25s ease;
+    }
+    .loveCard:hover{
+      transform:translateY(-3px) scale(1.025);
+      box-shadow:0 22px 55px rgba(139,92,246,.35);
+      background:rgba(255,255,255,.13);
+    }
+    /* FRONT */
+    .cardFront{
+      display:flex;flex-direction:column;
+      transition:opacity .3s ease,transform .3s ease;
+    }
+    .loveCard.flipped .cardFront{
+      opacity:0;height:0;overflow:hidden;pointer-events:none;
+      transform:rotateY(90deg);
+    }
+    .cardFront .ico{font-size:24px;margin-bottom:6px;}
+    .cardFront .label{font-size:13px;color:rgba(255,255,255,.75);line-height:1.5;}
+    /* BACK */
+    .cardBack{
+      display:none;
+      transition:opacity .3s ease,transform .3s ease;
+      opacity:0;transform:rotateY(-90deg);
+    }
+    .loveCard.flipped .cardBack{
+      display:block;opacity:1;transform:rotateY(0deg);
+    }
+    .cardBack .msg{
+      font-family:'Cormorant Garamond',serif;
+      font-size:15px;
+      line-height:1.85;
+      color:rgba(255,255,255,.95);
+      white-space:normal;
+      word-break:break-word;
+    }
+    .loveCounter{text-align:center;margin-top:16px;font-size:13px;color:rgba(255,255,255,.55);}
+
+    /* ══════════════════════════════
+       PAGE 6 — FUTURE
+    ══════════════════════════════ */
+    .sceneBtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+    .sceneBtn{padding:8px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.25);
+      background:rgba(255,255,255,.1);font-size:13px;color:rgba(255,255,255,.88);cursor:pointer;
+      transition:transform .2s cubic-bezier(.34,1.56,.64,1),background .2s ease,border-color .2s ease;}
+    .sceneBtn:hover{transform:translateY(-2px) scale(1.04);background:rgba(255,255,255,.18);}
+    .sceneBtn.active{background:linear-gradient(135deg,#8b5cf6,#c084fc);
+      border-color:rgba(255,255,255,.45);color:#fff;}
+    .sceneBox{margin-top:14px;padding:16px;border-radius:18px;
+      border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);
+      font-family:'Cormorant Garamond',serif;font-size:16.5px;line-height:2.0;
+      color:rgba(255,255,255,.92);min-height:120px;transition:all .4s ease;}
+    .promiseRow{margin-top:14px;display:flex;flex-direction:column;gap:8px;}
+    .promise{display:flex;gap:9px;align-items:flex-start;padding:10px 12px;
+      border-radius:14px;border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.06);font-size:13.5px;color:rgba(255,255,255,.82);
+      line-height:1.65;cursor:pointer;
+      transition:transform .2s cubic-bezier(.34,1.56,.64,1),
+                 background .2s ease,border-color .2s ease;}
+    .promise:hover{transform:translateX(4px);background:rgba(255,255,255,.12);}
+    .promise.ticked{border-color:rgba(196,181,253,.6);background:rgba(139,92,246,.2);}
+    .pIco{font-size:15px;flex-shrink:0;}
+
+    /* SPARKLE */
+    .sparkRow{text-align:center;margin-top:36px;}
+    .sparkBtn{border-radius:999px;border:1px solid rgba(255,255,255,.3);
+      background:linear-gradient(135deg,rgba(139,92,246,.5),rgba(232,160,191,.4));
+      backdrop-filter:blur(20px);padding:13px 30px;font-size:14.5px;font-weight:600;
+      color:#fff;cursor:pointer;box-shadow:0 16px 44px rgba(139,92,246,.45);
+      transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s ease;}
+    .sparkBtn:hover{transform:translateY(-2px) scale(1.04);
+      box-shadow:0 24px 65px rgba(139,92,246,.65);}
+    .sparkBtn:active{transform:scale(.97);}
+
+    /* PETALS */
+    .petal{position:fixed;border-radius:60% 40% 50% 50%;pointer-events:none;z-index:100;
+      animation:petalDrop var(--t) linear forwards;opacity:.95;}
+    @keyframes petalDrop{
+      from{transform:translate(0,0) rotate(0deg);opacity:.95;}
+      to{transform:translate(var(--dx),105vh) rotate(720deg);opacity:0;}
+    }
+  </style>
+</head>
+<body>
+  <div class="blob a"></div><div class="blob b"></div>
+  <div class="blob c"></div><div class="blob d"></div>
+  <div class="stars"></div>
+  <div class="petalLayer" id="fPetalLayer"></div>
+
+  <div class="wrap">
+
+    <!-- TOP CHIP -->
+    <div class="topChip">
+      <span class="chipDot"></span>
+      <span id="chipTxt">Day 3 — something I made just for you, Aparajeeta 💜</span>
+    </div>
+
+    <!-- STEP NAV -->
+    <nav class="stepNav" id="stepNav">
+      <div class="stepPill active" data-i="0">💌 Letter</div>
+      <div class="stepPill" data-i="1">🏅 Trophies</div>
+      <div class="stepPill" data-i="2">💜 Strength</div>
+      <div class="stepPill" data-i="3">🌧️ Mood</div>
+      <div class="stepPill" data-i="4">✨ Why I Love You</div>
+      <div class="stepPill" data-i="5">🏠 Our Future</div>
+    </nav>
+
+    <!-- SCREEN WRAP -->
+    <div class="screenWrap" id="screenWrap">
+
+      <!-- ══ PAGE 1: LETTER ══ -->
+      <div class="screen active" id="s0">
+        <div class="envelopeArea stag">
+          <div class="envelope" id="envelope">
+            <div class="envBack"></div>
+            <div class="envBBottom"></div>
+            <div class="envBL"></div>
+            <div class="envBR"></div>
+            <div class="envFlap">
+              <div class="flapFace"></div>
+              <div class="flapBack"></div>
+            </div>
+            <div class="waxSeal">🌸</div>
+          </div>
+          <p class="envHint" id="envHint">✦ tap the envelope to open your letter ✦</p>
+        </div>
+
+        <div class="letterSheet" id="letterSheet">
+          <div class="lRose">🌸</div>
+          <div class="lDate" id="lDate"></div>
+          <div class="lSalut">My dearest <span id="herNameL"></span>,</div>
+
+          <p class="lPara first" id="lp1">
+            I want to start this letter by saying something I don't say enough:
+            <em>I see you.</em> Not just the happy, glowing version of you.
+            I see <strong>all of you</strong> — the tired version, the in‑pain version,
+            the quietly‑struggling‑miles‑away‑from‑me version.
+            And every single version of you makes me feel so incredibly lucky to be yours.
+          </p>
+
+          <div class="lDivider">✦</div>
+
+          <p class="lPara" id="lp2">
+            These last three days have not been easy on your body.
+            I know that. I feel it from here — in every message you send,
+            in the silences between your words, in the way you say "I'm fine"
+            when I can tell you are carrying something so heavy.
+            <em>You don't have to carry it alone.</em>
+            Even from far away, I am holding as much of it as you'll let me.
+          </p>
+
+          <div class="lQuote" id="lq1">
+            "From far away, every difficult day you survive makes me love you more, not less.
+            The distance doesn't take away my pride in you.
+            If anything, watching you go through this — and still being you — multiplies it."
+          </div>
+
+          <p class="lPara" id="lp3">
+            You showed up for your day when your body was begging you not to.
+            You let yourself feel things instead of pretending to be okay.
+            You still reached out to me even when you had no energy left.
+            <em>Every single one of those things is a quiet, invisible act of strength.</em>
+            The world doesn't give out trophies for them. But I do — mine are on the next page.
+          </p>
+
+          <div class="lDivider">✦</div>
+
+          <p class="lPara" id="lp4">
+            I want you to know something, and I need you to really hear it:
+            you are <strong>not difficult to love</strong>.
+            You are just someone carrying something heavy —
+            and I am choosing, every day, deliberately and completely,
+            to stand right under that weight with you.
+            <em>That choice has never once felt like a burden.</em>
+          </p>
+
+          <div class="lQuote" id="lq2">
+            "Your strength is not in never crying.
+            It is in letting the tears fall and still believing
+            that tomorrow is worth reaching for.
+            And you do that, my girl. Every single time."
+          </div>
+
+          <p class="lPara" id="lp5">
+            Until the distance ends — rest when you need to.
+            Cry when you need to. Be moody when you need to.
+            <strong>You never have to earn my love by being 'okay'.</strong>
+            I love you in your strongest and in your most exhausted moments.
+            <em>Especially the exhausted ones.</em>
+          </p>
+
+          <div class="lPs" id="lps">
+            P.S. — Keep going through the pages, my girl. I made each one just for you. 💜
+          </div>
+
+          <div class="lClose" id="lclose">
+            <span class="lCloseWord">always and completely yours,</span>
+            <span class="lCloseName" id="yourNameL"></span>
+          </div>
+
+          <div class="lHearts" id="lhearts">
+            <span>💜</span><span>🌸</span><span>💜</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PAGE 2: TROPHIES ══ -->
+      <div class="screen enter-r" id="s1">
+        <div class="screenTitle stag">🏅 Your hidden trophies this week</div>
+        <p class="screenLead stag">These don't come with ceremonies. But they should. Tap the ones that are true — I'll tell you why each one matters so much to me.</p>
+        <div class="trophyGrid stag">
+          <div class="trophy" data-m="You showed up for life when your body was begging you not to, my girl. That's not ordinary. That's extraordinary. I see that. I'm completely in awe of that.">
+            <div class="trophyIco">🌧️</div>
+            <div class="trophyTxt">You pushed through your day even when every cell in your body wanted to stay in bed.</div>
+          </div>
+          <div class="trophy" data-m="You let yourself feel things instead of shutting down or performing happiness. That emotional honesty is one of the bravest, most beautiful things about you, my girl.">
+            <div class="trophyIco">💧</div>
+            <div class="trophyTxt">You let tears come or let yourself be moody instead of forcing a smile for everyone.</div>
+          </div>
+          <div class="trophy" data-m="That text, that call, that voice message — that was you trusting me with your real self. Not the 'together' self. The real one. That's the version I love the absolute most, my girl.">
+            <div class="trophyIco">📱</div>
+            <div class="trophyTxt">You still reached out to me, even when you had barely any energy left to talk.</div>
+          </div>
+          <div class="trophy" data-m="Choosing rest is not laziness. It's wisdom. It's self-respect. Your body needed you and you listened. That's the kind of care I hope you always give yourself, my girl.">
+            <div class="trophyIco">🛌</div>
+            <div class="trophyTxt">You gave yourself permission to rest without guilt at least once this week.</div>
+          </div>
+          <div class="trophy" data-m="Month after month, my girl, you survive this — a battle invisible to most people, but I see it every single time. You survive it every single time. And every time, I fall a little deeper for your strength.">
+            <div class="trophyIco">♻️</div>
+            <div class="trophyTxt">You made it through another full cycle — physically, emotionally, while being apart from me.</div>
+          </div>
+          <div class="trophy" data-m="Missing someone is exhausting in a way people rarely acknowledge. You feel it deeply — and instead of shutting it out, you let it in, and still choose to keep loving. That takes real courage, my girl.">
+            <div class="trophyIco">📍</div>
+            <div class="trophyTxt">You missed me and kept going anyway, instead of letting the distance win.</div>
+          </div>
+        </div>
+        <div class="trophyResponse stag" id="trophyResponse">
+          Tap any achievement above — I want to tell you exactly what it means to me.
+        </div>
+      </div>
+
+      <!-- ══ PAGE 3: STRENGTH ══ -->
+      <div class="screen enter-r" id="s2">
+        <div class="screenTitle stag">💜 The strength I see in you</div>
+        <p class="screenLead stag">You probably underestimate yourself, my girl. Most genuinely strong people do. Let me show you what I actually see.</p>
+
+        <div class="scoreBox stag">
+          <div class="scoreTop">
+            <span>Strength — through my eyes</span>
+            <span class="scoreNum" id="scoreNum">0%</span>
+          </div>
+          <div class="track"><div class="fill" id="scoreFill"></div></div>
+          <div class="btnPair">
+            <button class="smBtn" id="boostBtn">Add my love</button>
+            <button class="smBtn" id="truthBtn">Show the truth</button>
+          </div>
+        </div>
+
+        <div class="affirmBox stag" id="affirmBox">
+          Before you press anything, know this: to me, my girl, you are already doing more than enough.
+          You never have to earn my love by being "okay".
+        </div>
+
+        <div class="divider stag">how much I adore you</div>
+
+        <div class="starRow stag" id="starRow">
+          <span class="star" data-n="1">⭐</span>
+          <span class="star" data-n="2">⭐</span>
+          <span class="star" data-n="3">⭐</span>
+          <span class="star" data-n="4">⭐</span>
+          <span class="star" data-n="5">⭐</span>
+        </div>
+        <div class="starLabel stag" id="starLabel">tap a star to see what I think</div>
+      </div>
+
+      <!-- ══ PAGE 4: MOOD ══ -->
+      <div class="screen enter-r" id="s3">
+        <div class="screenTitle stag">🌧️ Tell me how you're feeling right now</div>
+        <p class="screenLead stag">Whatever is in your heart right now is allowed here, my girl. Pick the one that's most true — I'll talk to you like I'm right there next to you.</p>
+        <div class="moodGrid stag">
+          <button class="moodBtn" data-k="tired"><em>🥱</em>Very tired</button>
+          <button class="moodBtn" data-k="pain"><em>😣</em>In a lot of pain</button>
+          <button class="moodBtn" data-k="angry"><em>😤</em>Snappy / moody</button>
+          <button class="moodBtn" data-k="sad"><em>🌧️</em>Low / emotional</button>
+          <button class="moodBtn" data-k="miss"><em>📍</em>Missing you</button>
+          <button class="moodBtn" data-k="insecure"><em>🪞</em>Feeling not enough</button>
+          <button class="moodBtn" data-k="okay"><em>🙂</em>Actually okay</button>
+          <button class="moodBtn" data-k="hug"><em>🤍</em>Just need love</button>
+        </div>
+        <div class="moodOut stag" id="moodOut">
+          Nothing you feel right now makes you "too much" for me, my girl.
+          I'm here for the full, real, unfiltered version of you. Always.
+        </div>
+      </div>
+
+      <!-- ══ PAGE 5: WHY I LOVE YOU ══ -->
+      <div class="screen enter-r" id="s4">
+        <div class="screenTitle stag">✨ Things I love about you, my girl</div>
+        <p class="screenLead stag">Tap each card to flip it open. Every one is something real — something I think about when I miss you.</p>
+
+        <div class="loveDeck stag" id="loveDeck">
+
+          <div class="loveCard" data-msg="The way you laugh — really laugh — where your whole face changes and you forget to be self-conscious. That laugh is my favorite sound in the entire world, my girl.">
+            <div class="cardFront">
+              <div class="ico">😂</div>
+              <div class="label">The way you laugh</div>
+            </div>
+            <div class="cardBack"><div class="msg"></div></div>
+          </div>
+
+          <div class="loveCard" data-msg="You feel everything deeply, my girl. You don't do surface-level. Your emotions are real and big and honest — and I would never want you to shrink them for anyone, ever.">
+            <div class="cardFront">
+              <div class="ico">💜</div>
+              <div class="label">How deeply you feel</div>
+            </div>
+            <div class="cardBack"><div class="msg"></div></div>
+          </div>
+
+          <div class="loveCard" data-msg="You're brave in ways you don't even recognize, my girl. Getting through these days, in pain, alone, far from me — and still being kind and loving — that takes courage most people simply don't have.">
+            <div class="cardFront">
+              <div class="ico">🦋</div>
+              <div class="label">Your quiet bravery</div>
+            </div>
+            <div class="cardBack"><div class="msg"></div></div>
+          </div>
+
+          <div class="loveCard" data-msg="Even on your worst days you are soft with me, my girl. You try. You reach out. You check in. That softness — choosing to be gentle when you're hurting — is one of the most beautiful things about you.">
+            <div class="cardFront">
+              <div class="ico">🌸</div>
+              <div class="label">Your softness</div>
+            </div>
+            <div class="cardBack"><div class="msg"></div></div>
+          </div>
+
+          <div class="loveCard" data-msg="The way your mind works — how you see things, the connections you make, what makes you laugh, what makes you cry — I could listen to you think out loud forever, my girl. Never get bored.">
+            <div class="cardFront">
+              <div class="ico">🧠</div>
+              <div class="label">The way you think</div>
+            </div>
+            <div class="cardBack"><div class="msg"></div></div>
+          </div>
+
+          <div class="loveCard" data-msg="You show up for the people you love, my girl. Even when you have nothing left, you still try. That loyalty is rare. And I am so incredibly lucky to be one of your people.">
+            <div class="cardFront">
+              <div class="ico">🤝</div>
+              <div class="label">How you show up</div>
+            </div>
+            <div class="cardBack"><div class="msg"></div></div>
+          </div>
+
+        </div>
+        <div class="loveCounter stag" id="loveCounter">0 of 6 opened</div>
+      </div>
+
+      <!-- ══ PAGE 6: FUTURE ══ -->
+      <div class="screen enter-r" id="s5">
+        <div class="screenTitle stag">🏠 Our future period days together</div>
+        <p class="screenLead stag">One day the distance ends, my girl. Pick a scene — let me paint it for you.</p>
+
+        <div class="sceneBtns stag">
+          <button class="sceneBtn active" data-s="couch">🛋️ Couch night</button>
+          <button class="sceneBtn" data-s="kitchen">🍜 Midnight kitchen</button>
+          <button class="sceneBtn" data-s="pharmacy">🏪 Emergency run</button>
+          <button class="sceneBtn" data-s="work">😤 After hard day</button>
+          <button class="sceneBtn" data-s="sunday">☀️ Lazy Sunday</button>
+          <button class="sceneBtn" data-s="rain">🌧️ Rainy afternoon</button>
+        </div>
+
+        <div class="sceneBox stag" id="sceneBox">
+          Period day in the future — you on the couch in my biggest hoodie, my girl. Legs across my lap. Heating pad on your tummy. Some show we've already seen playing. My fingers doing nothing except being warm against your ankles. No words needed. Just us, quiet, and safe.
+        </div>
+
+        <div class="divider stag">my promises to you</div>
+
+        <div class="promiseRow stag">
+          <div class="promise">
+            <span class="pIco">💜</span>
+            <span>I will never make you feel like a burden for having hard days, my girl. Tap to hold this promise.</span>
+          </div>
+          <div class="promise">
+            <span class="pIco">🌸</span>
+            <span>I will always run to the pharmacy without complaining. Every single month. Without fail.</span>
+          </div>
+          <div class="promise">
+            <span class="pIco">🤍</span>
+            <span>I will hold you through the pain without needing you to perform strength for me.</span>
+          </div>
+          <div class="promise">
+            <span class="pIco">✨</span>
+            <span>I will remind you how strong you are, my girl — especially on the days you forget.</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /screenWrap -->
+
+    <!-- BOTTOM NAV -->
+    <div class="navRow">
+      <span class="pageLabel" id="pageLabel">Page 1 of 6</span>
+      <div class="navBtns">
+        <button class="navBtn" id="prevBtn" disabled>← Back</button>
+        <button class="navBtn primary" id="nextBtn">Next →</button>
+      </div>
+    </div>
+
+    <div class="sparkRow">
+      <button class="sparkBtn" id="sparkBtn">🌸 Shower my girl in lavender light</button>
+    </div>
+
+  </div><!-- /wrap -->
+
+  <script>
+    /* ── CONFIG ── */
+    const HER_NAME  = "My Girl (Aparajeeta)";
+    const YOUR_NAME = "Your Boy";
+
+    /* ── INIT ── */
+    document.getElementById("herNameL").textContent  = HER_NAME;
+    document.getElementById("yourNameL").textContent = YOUR_NAME;
+
+    const d = new Date();
+    const MONTHS = ["January","February","March","April","May","June",
+                    "July","August","September","October","November","December"];
+    document.getElementById("lDate").textContent =
+      MONTHS[d.getMonth()]+" "+d.getDate()+", "+d.getFullYear();
+
+    /* ── CHIP ROTATION ── */
+    const chipEl = document.getElementById("chipTxt");
+    const chips  = [
+      "Day 3 — something I made just for you, Aparajeeta 💜",
+      "Somewhere far away, Your Boy is clapping for everything you're surviving.",
+      "Every difficult day you survive makes me love you more, not less — always.",
+      "If you could see yourself through my eyes, you'd never call yourself weak again.",
+      "The distance can't touch the way I love you, my girl. Nothing can."
+    ];
+    let ci=0;
+    setInterval(()=>{ ci=(ci+1)%chips.length; chipEl.textContent=chips[ci]; },4800);
+
+    /* ── AMBIENT PETALS ── */
+    const fLayer = document.getElementById("fPetalLayer");
+    const lavPal = ["#d8b4fe","#c084fc","#e8a0bf","#fde68a","#f9a8d4"];
+    for(let i=0;i<20;i++){
+      const p=document.createElement("div"); p.className="fp";
+      p.style.background=lavPal[Math.floor(Math.random()*lavPal.length)];
+      p.style.width=(10+Math.random()*16)+"px";
+      p.style.height=(10+Math.random()*16)+"px";
+      p.style.left=(Math.random()*100)+"vw";
+      p.style.animationDuration=(12+Math.random()*14)+"s";
+      p.style.animationDelay=(Math.random()*10)+"s";
+      fLayer.appendChild(p);
+    }
+
+    /* ── PETAL BURST ── */
+    function popPetals(n){
+      const pal=[["#d8b4fe","#c084fc"],["#e8a0bf","#f9a8d4"],
+                 ["#fde68a","#d8b4fe"],["#c084fc","#e8a0bf"]];
+      for(let i=0;i<n;i++){
+        const p=document.createElement("div");
+        const [a,b]=pal[Math.floor(Math.random()*pal.length)];
+        p.className="petal";
+        p.style.background=`linear-gradient(135deg,${a},${b})`;
+        p.style.left=(Math.random()*100)+"vw";
+        p.style.top=(-5-Math.random()*40)+"px";
+        p.style.width=(8+Math.random()*14)+"px";
+        p.style.height=(8+Math.random()*14)+"px";
+        p.style.setProperty("--dx",((Math.random()*2-1)*22)+"vw");
+        p.style.setProperty("--t",(2.2+Math.random()*2.4)+"s");
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(),4700);
+      }
+    }
+    document.getElementById("sparkBtn").addEventListener("click",()=>popPetals(70));
+
+    /* ── ENVELOPE OPEN ── */
+    const envelope = document.getElementById("envelope");
+    const envHint  = document.getElementById("envHint");
+    const lSheet   = document.getElementById("letterSheet");
+    let envOpened  = false;
+    envelope.addEventListener("click",()=>{
+      if(envOpened) return;
+      envOpened=true;
+      envelope.classList.add("open");
+      envHint.textContent="✦ your letter is below, my girl ✦";
+      setTimeout(()=>{
+        lSheet.classList.add("show");
+        ["lp1","lp2","lq1","lp3","lp4","lq2","lp5","lps","lclose","lhearts"]
+          .forEach((id,i)=>setTimeout(()=>{
+            const el=document.getElementById(id);
+            if(el) el.classList.add("show");
+          },i*180));
+        setTimeout(setHeight,200);
+      },950);
+      popPetals(30);
+    });
+
+    /* ── NAVIGATION ── */
+    const screens   = Array.from(document.querySelectorAll(".screen"));
+    const pills     = Array.from(document.querySelectorAll(".stepPill"));
+    const sw        = document.getElementById("screenWrap");
+    const prevBtn   = document.getElementById("prevBtn");
+    const nextBtn   = document.getElementById("nextBtn");
+    const pageLabel = document.getElementById("pageLabel");
+    let cur=0;
+
+    function setHeight(){
+      sw.style.height=(screens[cur].scrollHeight+48)+"px";
+    }
+    setTimeout(setHeight,120);
+    window.addEventListener("resize",setHeight);
+
+    function goTo(next){
+      if(next===cur) return;
+      const dir=next>cur?1:-1;
+      const old=screens[cur], neu=screens[next];
+      old.classList.remove("active");
+      old.classList.add(dir>0?"exit-l":"exit-r");
+      setTimeout(()=>old.classList.remove("exit-l","exit-r"),500);
+      neu.classList.remove("enter-r","enter-l");
+      neu.classList.add(dir>0?"enter-r":"enter-l");
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        neu.classList.add("active");
+        neu.classList.remove("enter-r","enter-l");
+        setTimeout(setHeight,60);
+      }));
+      pills.forEach((p,i)=>{
+        p.classList.remove("active","done");
+        if(i<next) p.classList.add("done");
+        if(i===next) p.classList.add("active");
+      });
+      cur=next;
+      pageLabel.textContent=`Page ${cur+1} of ${screens.length}`;
+      prevBtn.disabled=cur===0;
+      nextBtn.textContent=cur===screens.length-1?"Finish ♥":"Next →";
+      if(cur===screens.length-1) popPetals(35);
+    }
+
+    nextBtn.addEventListener("click",()=>{
+      if(cur<screens.length-1) goTo(cur+1);
+      else popPetals(80);
+    });
+    prevBtn.addEventListener("click",()=>{ if(cur>0) goTo(cur-1); });
+    pills.forEach(p=>p.addEventListener("click",()=>goTo(Number(p.dataset.i))));
+
+    /* ── PAGE 2: TROPHIES ── */
+    const tRes=document.getElementById("trophyResponse");
+    document.querySelectorAll(".trophy").forEach(t=>{
+      t.addEventListener("click",()=>{
+        document.querySelectorAll(".trophy").forEach(x=>x.classList.remove("unlocked"));
+        t.classList.add("unlocked");
+        tRes.textContent=t.dataset.m+" — Always, "+YOUR_NAME+".";
+        popPetals(18);
+        setTimeout(setHeight,60);
+      });
+    });
+
+    /* ── PAGE 3: STRENGTH ── */
+    let score=0;
+    const scoreFill=document.getElementById("scoreFill");
+    const scoreNum =document.getElementById("scoreNum");
+    const affirmBox=document.getElementById("affirmBox");
+    const affirms=[
+      "You are not difficult to love, my girl. You are just carrying something heavy — and I'm choosing to stand under it with you.",
+      "Your strength is not in never crying. It's in letting tears fall and still believing tomorrow is worth reaching for.",
+      "Even on days when you say 'I did nothing,' you still survived pain I'll never fully understand. That is not nothing.",
+      "The world might not clap for you today. But Your Boy is — from wherever he is. You are seen. You are enough.",
+      "You are allowed to fall apart a little, my girl. I will still hold you as the strongest person I know."
+    ];
+    let ai=0;
+    function renderScore(){
+      scoreFill.style.width=score+"%";
+      scoreNum.textContent=score+"%";
+      if(score===100) scoreNum.style.color="#fde68a";
+      setTimeout(setHeight,60);
+    }
+    document.getElementById("boostBtn").addEventListener("click",()=>{
+      score=Math.min(100,score+(10+Math.floor(Math.random()*12)));
+      renderScore();
+      affirmBox.textContent=affirms[ai%affirms.length];
+      ai++; popPetals(18);
+    });
+    document.getElementById("truthBtn").addEventListener("click",()=>{
+      score=100; renderScore();
+      affirmBox.textContent="My honest score for you has always been 100%, my girl. The distance, the pain, the doubt — none of it has ever, for even one second, lowered the way I see you.";
+      popPetals(55);
+    });
+
+    const starLabels=[
+      "",
+      "You mean so much to me, my girl.",
+      "You are incredible and I mean that.",
+      "You are amazing and I'm so proud of you every single day.",
+      "You are my favorite person in the entire world.",
+      "You are everything. 100% was never enough to describe you. 💜"
+    ];
+    document.querySelectorAll(".star").forEach(s=>{
+      s.addEventListener("click",()=>{
+        const n=Number(s.dataset.n);
+        document.querySelectorAll(".star").forEach((x,i)=>x.classList.toggle("lit",i<n));
+        document.getElementById("starLabel").textContent=starLabels[n];
+        popPetals(n*8);
+      });
+    });
+
+    /* ── PAGE 4: MOOD ── */
+    const moodOut=document.getElementById("moodOut");
+    const moods={
+      tired:"If you're running on empty tonight, my girl — please don't feel guilty for slowing down. If all you do tonight is breathe and exist, Your Boy is still so proud of you. Rest is not giving up. Rest is how you keep going.",
+      pain:"If you're in a lot of pain right now — I wish I could be there. I'd put both hands on your tummy and hold you still until it eased. Since I can't, imagine my warmth there instead — real and constant and completely yours, my girl.",
+      angry:"If everything is annoying you right now: that's okay, my girl. You don't have to be sweet for me. Rant. Complain. Swear a little. I'll sit through all of it and still be right here when it quiets down.",
+      sad:"If you feel low: cry if you need to, my girl. You don't have to hide it from me. Your tears don't change how I feel about you. They just make me want to hold you so much more.",
+      miss:"If missing me is hurting tonight — it hurts Your Boy too. I keep reaching for my phone just to check on you. We're not in the same room, but my girl — we are in the same story. And it ends with us together.",
+      insecure:"If you feel like you're not enough: I promise you, on your worst, most exhausted day, you are still the most beautiful and real person I know, my girl. You are more than enough. You always have been.",
+      okay:"If you're somehow okay tonight: hold onto that, my girl. Let your body breathe. You've earned this little window of calm. Your Boy is happy for you — and still wants to call you just to hear your voice.",
+      hug:"If you just need love right now: close your eyes and imagine me pulling you into my chest, one arm tight around you, chin on your head, saying nothing. Just being there. That's exactly where I'd be, my girl."
+    };
+    document.querySelectorAll(".moodBtn").forEach(b=>{
+      b.addEventListener("click",()=>{
+        document.querySelectorAll(".moodBtn").forEach(x=>x.classList.remove("chosen"));
+        b.classList.add("chosen");
+        moodOut.textContent=moods[b.dataset.k];
+        popPetals(18);
+        setTimeout(setHeight,60);
+      });
+    });
+
+    /* ── PAGE 5: LOVE CARDS ── */
+    let opened=0;
+    document.querySelectorAll(".loveCard").forEach(c=>{
+      c.querySelector(".cardBack .msg").textContent=c.dataset.msg;
+      c.addEventListener("click",()=>{
+        if(!c.classList.contains("flipped")){
+          opened++;
+          document.getElementById("loveCounter").textContent=opened+" of 6 opened";
+          popPetals(14);
+        }
+        c.classList.toggle("flipped");
+        setTimeout(setHeight,60);
+      });
+    });
+
+    /* ── PAGE 6: SCENES ── */
+    const scenes={
+      couch:"Period day in the future — you on the couch in my biggest hoodie, my girl. Legs across my lap. Heating pad on your tummy. Some show we've already seen playing. My fingers doing nothing except being warm against your ankles. No words needed. Just us, quiet, and safe.",
+      kitchen:"Kitchen at midnight — I'm making whatever you asked for, probably burning it slightly. You're leaning on the counter watching me like I'm your favorite comedian. I pass you a fork and steal a kiss. You tell me I'm annoying. You're smiling, my girl.",
+      pharmacy:"Emergency run — it's raining. I grab my keys before you finish the sentence. I send you a selfie from the aisle asking 'this brand?' with three question marks. I come back wet and slightly dramatic. You roll your eyes. I don't care. I'd do it every month. Every single time.",
+      work:"After a hard day — you walk in, throw your bag, say nothing. I open my arms. You walk straight into them, my girl. No advice. Just a long hug, you breathing out everything you were holding, and me holding it with you until you're ready to talk.",
+      sunday:"Lazy Sunday — no alarms. You wake up slowly. I'm already awake watching you like the absolute creep I am. You catch me, groan, bury your face in the pillow. I kiss your shoulder and say 'good morning, my favorite person.' You say nothing but I see you smiling, my girl.",
+      rain:"Rainy afternoon — the window is foggy, the blanket enormous, doing absolutely nothing of value. Your head in my lap. Me playing with your hair. You fall asleep. I don't move for two hours. Happiest two hours of my life — every time, my girl."
+    };
+    const sceneBox=document.getElementById("sceneBox");
+    document.querySelectorAll(".sceneBtn").forEach(b=>{
+      b.addEventListener("click",()=>{
+        document.querySelectorAll(".sceneBtn").forEach(x=>x.classList.remove("active"));
+        b.classList.add("active");
+        sceneBox.textContent=scenes[b.dataset.s];
+        popPetals(16);
+      });
+    });
+    document.querySelectorAll(".promise").forEach(p=>{
+      p.addEventListener("click",()=>{
+        p.classList.toggle("ticked");
+        if(p.classList.contains("ticked")) popPetals(14);
+      });
+    });
+  </script>
+</body>
+</html>
